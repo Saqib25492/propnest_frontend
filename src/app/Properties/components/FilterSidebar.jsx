@@ -1,5 +1,3 @@
-// src/app/Properties/components/FilterSidebar.jsx
-
 'use client'
 
 import { useState } from 'react'
@@ -9,23 +7,41 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 
 export default function FilterSidebar({ filters, setFilters, onApply }) {
-  const [localFilters, setLocalFilters] = useState(filters)
+  const [localFilters, setLocalFilters] = useState({
+    ...filters,
+    bedrooms: [],
+    bathrooms: [],
+  });
 
   const handleCheckboxChange = (type, value) => {
     const updated = localFilters[type]?.includes(value)
-      ? localFilters[type].filter(v => v !== value)
-      : [...(localFilters[type] || []), value]
-    setLocalFilters({ ...localFilters, [type]: updated })
-  }
+      ? localFilters[type].filter((v) => v !== value)
+      : [...(localFilters[type] || []), value];
+
+    setLocalFilters({ ...localFilters, [type]: updated });
+  };
 
   const handlePriceChange = (value) => {
-    setLocalFilters({ ...localFilters, price: value })
-  }
+    setLocalFilters({ ...localFilters, price: value });
+  };
 
   const applyFilters = () => {
-    setFilters(localFilters)
-    onApply()
-  }
+    const highestBedrooms = localFilters.bedrooms?.length
+      ? Math.max(...localFilters.bedrooms)
+      : null;
+
+    const highestBathrooms = localFilters.bathrooms?.length
+      ? Math.max(...localFilters.bathrooms)
+      : null;
+
+    setFilters({
+      price: localFilters.price,
+      minBedrooms: highestBedrooms,
+      minBathrooms: highestBathrooms,
+    });
+
+    onApply();
+  };
 
   return (
     <aside className="w-full h-screen md:w-64 bg-white border-r p-6 space-y-6">
@@ -51,7 +67,7 @@ export default function FilterSidebar({ filters, setFilters, onApply }) {
           <label key={room} className="flex items-center gap-2 text-sm mb-1">
             <Checkbox
               checked={localFilters.bedrooms?.includes(room)}
-              onCheckedChange={() => handleCheckboxChange("bedrooms", room)}
+              onCheckedChange={() => handleCheckboxChange('bedrooms', room)}
             />
             {room}+ Bedrooms
           </label>
@@ -66,7 +82,7 @@ export default function FilterSidebar({ filters, setFilters, onApply }) {
           <label key={bath} className="flex items-center gap-2 text-sm mb-1">
             <Checkbox
               checked={localFilters.bathrooms?.includes(bath)}
-              onCheckedChange={() => handleCheckboxChange("bathrooms", bath)}
+              onCheckedChange={() => handleCheckboxChange('bathrooms', bath)}
             />
             {bath}+ Bathrooms
           </label>
@@ -77,5 +93,5 @@ export default function FilterSidebar({ filters, setFilters, onApply }) {
         Apply Filters
       </Button>
     </aside>
-  )
+  );
 }
