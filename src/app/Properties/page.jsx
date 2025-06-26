@@ -23,7 +23,7 @@ export default function PropertiesPage() {
     try {
       setLoading(true);
 
-      const res = await axios.get(`http://localhost:5000/api/properties`, {
+      const res = await axios.get(`propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net/api/properties`, {
         params: {
           page: pageNum,
           limit: 12,
