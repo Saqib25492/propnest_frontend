@@ -5,6 +5,10 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
 import { propertySchema } from '@/lib/validation/propertySchema'
+import { uploadPropertyMedia } from '@/lib/utils/uploadPropertyMedia'
+import {toast, Toaster} from 'react-hot-toast'
+
+
 
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -26,29 +30,30 @@ export default function UploadPropertyPage() {
     resolver: yupResolver(propertySchema),
   })
 
+
   const onSubmit = async (data) => {
-    const formData = new FormData()
-
-    // Append form fields
-    Object.entries(data).forEach(([key, value]) => {
-      if (key === 'images') {
-        Array.from(value).forEach((file) => {
-          formData.append('images', file)
-        })
-      } else if (key === 'video' && value instanceof File) {
-        formData.append('video', value)
-      } else {
-        formData.append(key, value)
-      }
-    })
-
     try {
-      const res = await axios.post('https://propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net/api/properties', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      console.log('Upload success:', res.data)
-      reset() // optional: reset form after success
-      alert('Property uploaded successfully!')
+      // STEP 1: Submit property text info
+      const propertyData = { ...data }
+      delete propertyData.images
+      delete propertyData.video
+
+      const textRes = await axios.post('http://localhost:5000/api/properties', propertyData)
+      const propertyId = textRes.data.propertyId
+
+
+
+      // STEP 2: Upload media if any
+      if (data.images?.length || data.video) {
+        uploadPropertyMedia(propertyId, data.images, data.video)
+          .then(() => console.log('📤 Media uploaded (queued)'))
+          .catch((err) => console.error('❌ Media upload failed (background):', err))
+
+      }
+
+      reset()
+      toast.success('Property uploaded successfully and media processing started!')
+
     } catch (err) {
       console.error('Upload failed:', err)
       alert('Upload failed. Please try again.')
@@ -57,6 +62,7 @@ export default function UploadPropertyPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl mx-auto space-y-6 py-10 px-4">
+      <Toaster position="top-right" reverseOrder={false} />
       {/* Property Basics */}
       <Card>
         <CardHeader>

@@ -9,7 +9,7 @@ export const propertySchema = yup.object().shape({
     .number()
     .min(0, "Rating cannot be below 0")
     .max(5, "Rating cannot exceed 5")
-    .default(0),
+    .default(4),
 
   address: yup.string().required("Address is required"),
   rooms: yup.number().min(1).required("Rooms required"),
