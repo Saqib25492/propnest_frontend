@@ -14,7 +14,7 @@ export default function PropertiesPage() {
   const [hasMore, setHasMore] = useState(true);
 
   const [filters, setFilters] = useState({
-    price: [500, 10000],
+    price: [500, 1000000000],
     minBedrooms: null,
     minBathrooms: null,
   });
