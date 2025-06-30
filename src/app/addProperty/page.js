@@ -38,7 +38,7 @@ export default function UploadPropertyPage() {
       delete propertyData.images
       delete propertyData.video
 
-      const textRes = await axios.post('http://localhost:5000/api/properties', propertyData)
+      const textRes = await axios.post('https://propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net/api/properties', propertyData)
       const propertyId = textRes.data.propertyId
 
 

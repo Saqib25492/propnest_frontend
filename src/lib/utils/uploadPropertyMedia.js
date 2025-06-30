@@ -12,7 +12,7 @@ export async function uploadPropertyMedia(propertyId, images, video = null) {
     formData.append('video', video)
   }
 
-  const res = await axios.post('http://localhost:5000/api/upload/media', formData, {
+  const res = await axios.post('https://propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net/api/upload/media', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 
