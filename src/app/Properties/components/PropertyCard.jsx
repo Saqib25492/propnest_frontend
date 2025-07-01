@@ -5,6 +5,7 @@ import { Heart, MapPin, Bath, BedDouble, Ruler } from 'lucide-react';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import Image from 'next/image';
 
 export default function PropertyCard({ images, title, rating, address, rooms, bathrooms, area, price }) {
   const [liked, setLiked] = useState(false);
@@ -16,12 +17,21 @@ export default function PropertyCard({ images, title, rating, address, rooms, ba
       <div className="relative">
         <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }} modules={[Pagination]}>
           {images.map((src, index) => (
-            <SwiperSlide key={index}>
-              <img
+            <SwiperSlide key={index} className="relative w-full h-48 p-1 rounded-xl overflow-hidden">
+              {/* <img
                 src={src}
                 alt={`Property ${index + 1}`}
                 className="w-full h-48 object-cover p-1 rounded-xl"
-              />
+              /> */}
+               <div className="relative w-full h-48 p-1 rounded-xl overflow-hidden">
+                <Image
+                  src={src}
+                  alt={`Property ${index + 1}`}
+                  fill
+                  className="object-cover rounded-xl"
+                  sizes="(max-width: 640px) 100vw, 400px"
+                />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
