@@ -58,6 +58,9 @@ export default function UploadPropertyPage() {
       }
       setIsSent(true)
       reset()
+      setSelectedImages([])
+      setImagePreviews([])
+      setSelectedVideoFile(null)
       toast.success('Property uploaded successfully and media processing started!')
 
     } catch (err) {
@@ -76,13 +79,28 @@ export default function UploadPropertyPage() {
   }
 
   setSelectedImages(files);
-  setValue('images', files);  // <-- Sync with react-hook-form
+  setValue('images', files);  
 
-  // Create previews
+  // Creating previews
+  const previews = files.map(file => URL.createObjectURL(file));
+  setImagePreviews(previews);
+};
+const handleDrop = (e) => {
+  e.preventDefault();
+  const files = Array.from(e.dataTransfer.files || []);
+  if (files.length > 5) {
+    toast.error("Please select a maximum of 5 images");
+    return;
+  }
+  setSelectedImages(files);
+  setValue('images', files);
   const previews = files.map(file => URL.createObjectURL(file));
   setImagePreviews(previews);
 };
 
+const handleDragOver = (e) => {
+  e.preventDefault();
+};
 
  const removeImage = (index) => {
   const newImages = selectedImages.filter((_, i) => i !== index);
@@ -92,7 +110,7 @@ export default function UploadPropertyPage() {
 
   setSelectedImages(newImages);
   setImagePreviews(newPreviews);
-  setValue('images', newImages);  // <-- Keep react-hook-form updated
+  setValue('images', newImages);  
 };
 
 const handleVideoFileChange = (e) => {
@@ -146,7 +164,9 @@ const handleVideoFileChange = (e) => {
         <CardContent className="space-y-4">
           <div>
             <Label>Property Images (max 5)</Label>
-             <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-gray-400 transition-colors">
+             <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-gray-400 transition-colors"
+               onDrop={handleDrop}
+               onDragOver={handleDragOver}>
               <div className="text-center">
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-lg font-medium text-gray-900 mb-2">Upload Property Images</p>
@@ -257,7 +277,7 @@ const handleVideoFileChange = (e) => {
           ) : isSent ? (
             <>
               <CheckCircle className="h-4 w-4 mr-2" />
-              Sent
+              Submitted 
             </>
           ) : (
             'Upload Property'
