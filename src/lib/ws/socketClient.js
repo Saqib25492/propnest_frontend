@@ -7,7 +7,7 @@ export function getSocket() {
     return socket;
   }
 
-  socket = new WebSocket('ws://localhost:5000'); // change to wss://your-api-url in production
+  socket = new WebSocket('wss://propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net'); // change to wss://your-api-url in production
 
   socket.onopen = () => {
     console.log('WebSocket connected');

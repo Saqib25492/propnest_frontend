@@ -13,7 +13,7 @@ export async function uploadPropertyMedia(propertyId, images, video, onProgress)
   }
 
   const res = await axios.post(
-    'http://localhost:5000/api/upload/media',
+    'https://propnest-fnhzaaakhudzcfd6.uaenorth-01.azurewebsites.net/api/upload/media',
     formData,
     {
       headers: { 'Content-Type': 'multipart/form-data' },
